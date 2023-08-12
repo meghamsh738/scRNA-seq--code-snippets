@@ -11,7 +11,7 @@ import os
 from selenium.webdriver.common.by import By
 import re
 
-genes_csv_file = r"C:\Users\User\Desktop\Run_3_InjWT\InjD3_D33_WT_Run3\iterations\D3_Run1_woINJWT_D3_Run1_InjWT_D3_Run2_InjWT_D32_Run2_InjWT\D3_Run1_woINJWT_D3_Run1_InjWT_D3_Run2_InjWT_D32_Run2_InjWT_makers_processed.xlsx"
+genes_csv_file = r"Enter path to your xlsx file"
 xlsx = pd.ExcelFile(genes_csv_file)
 
 
