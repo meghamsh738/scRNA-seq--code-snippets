@@ -2,7 +2,7 @@
 These code snippets will come handy in few scenarios. 
 
 
-##Automated Analysis and Download with Selenium Script for MetaScape
+## Automated Analysis and Download with Selenium Script for MetaScape
 
 This repository contains a Python script designed to automate the process of gene analysis and data download from MetaScape, a biological pathway and gene set analysis platform. The script utilizes the Selenium web automation framework to interact with the MetaScape website. Here's an overview of the steps performed by the script:
 
