@@ -76,6 +76,6 @@ Remember to tailor the description according to your specific use case and audie
 
 
 
-## Filtering significantly upregulated DGEs
+## Plots for top DGEs
 
 This code reads the highly expressed genes (depending on the input) within each cluster, and then generates violin plots and feature plots for these genes. The resulting plots are saved in the designated output folder.
