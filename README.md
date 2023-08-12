@@ -48,7 +48,7 @@ This script provides an efficient way to automate the analysis and data retrieva
 
 
 
-## Gene Analysis and Clustering
+## Filtering significantly upregulated DGEs
 
 This GitHub repository contains code for performing gene analysis and clustering using R. The code reads in a CSV file containing gene expression data, clusters the genes based on a specified criteria, and extracts selected genes meeting certain p-value and log-fold change thresholds. The resulting selected genes are then organized into separate Excel worksheets for each cluster.
 
