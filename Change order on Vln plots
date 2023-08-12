@@ -1,0 +1,7 @@
+
+
+# Define an order of cluster identities
+my_levels <- c(0,2,1,3,5,6,4)
+
+# Relevel object@ident
+Seurat@active.ident <- factor(x = Seurat@active.ident, levels = my_levels)
