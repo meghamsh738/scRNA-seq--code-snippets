@@ -1,0 +1,7 @@
+updated_seurat_project <- lapply(X = seurat_project, FUN = function(seurat_object) {
+  seurat_object[["percent.mt"]] <- PercentageFeatureSet(object = seurat_object, pattern = "^mt-")
+  seurat_object[["percent.ribo"]] <- PercentageFeatureSet(object = seurat_object, pattern = "^Rp[sl]")
+  seurat_object[["percent.hbb"]] <- PercentageFeatureSet(object = seurat_object, features = hemoGenes)
+  featureinfo <- seurat_object@meta.data[, c("nCount_RNA", "nFeature_RNA", "orig.ident", "percent.mt", "percent.ribo", "percent.hbb")]
+  # Subset on filtered cells and continue...
+})
