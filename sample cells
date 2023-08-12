@@ -1,0 +1,3 @@
+#In cases where you want to sample a subset of dataset randomly and see if same clusters are recapitualted in scenaiors. This can be used to test how many cells have to be targeted for representing a particular population.  
+
+seurat.subsampled <- seurat[, sample(colnames(seurat), size =500, replace=F)]
