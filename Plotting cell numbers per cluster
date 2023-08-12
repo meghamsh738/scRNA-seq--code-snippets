@@ -1,0 +1,76 @@
+# This is for raw cell counts.
+```{r}
+
+# Reshape the data frame from wide to long format
+df_long <- tidyr::gather(Seurat_integrated_cells, key = "Cluster", value = "ClusterNumber", -sample)
+
+# Define the custom breaks
+custom_breaks <- c(0,1000, 2000, 3000, 4000, 5000, 6000, 7000)
+
+# Create the plot
+plot <- ggplot(df_long, aes(x = sample, y = ClusterNumber, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "sample", y = "Cell Number", fill = "Cluster") +
+  theme_minimal() +
+  scale_y_continuous(breaks = custom_breaks)
+
+output_dir <- "../(Enter directory for output)/Sample_A_Sample_B"
+
+
+# Specify the file path and name for saving the plot
+file_path <- file.path(output_dir, "raw_cluster_numbers.png")
+
+# Save the plot as a PNG file
+ggsave(filename = file_path, plot = plot, dpi = 300)
+
+
+write.csv(x = df_long, file = "../(Enter directory for output)/Sample_A_Sample_B/raw_cluster_numbers.csv")
+
+```
+
+# This is for normalized cell counts. 
+```{r}
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+# Reshape the data frame from wide to long format
+df_long <- tidyr::gather(Seurat_integrated_cells, key = "Cluster", value = "ClusterNumber", -sample)
+
+# Calculate total cell counts per sample
+df_long <- df_long %>%
+  group_by(sample) %>%
+  mutate(TotalCells = sum(ClusterNumber, na.rm = TRUE))  # add na.rm = TRUE to ignore NA values
+
+# Replace NA values in ClusterNumber with 0
+df_long$ClusterNumber[is.na(df_long$ClusterNumber)] <- 0
+
+# Normalize cell numbers by total cells
+df_long <- df_long %>%
+  mutate(NormalizedNumber = (ClusterNumber / TotalCells) * 100)
+
+# Define the custom breaks
+custom_breaks <- seq(0, 100, by = 10)
+
+# Create the plot
+plot <- ggplot(df_long, aes(x = sample, y = NormalizedNumber, fill = Cluster)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_text(aes(label = paste0(round(NormalizedNumber), "%")), vjust = -0.5, position = position_dodge(width = 1)) +  # Add percentage labels on top of bars
+  labs(x = "Sample", y = "Normalized Cell Number (%)", fill = "Cluster") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 100), breaks = custom_breaks)
+
+
+output_dir <- "../(Enter directory for output)/Sample_A_Sample_B"
+
+# Specify the file path and name for saving the plot
+file_path <- file.path(output_dir, "cluster_numbers_normalised.png")
+
+# Save the plot as a PNG file
+ggsave(filename = file_path, plot = plot, dpi = 300)
+
+write.csv(x = df_long, file = "../(Enter directory for output)/Sample_A_Sample_B/cluster_numbers_normalised.csv")
+
+
+```
+
