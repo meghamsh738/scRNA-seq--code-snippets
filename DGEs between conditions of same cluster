@@ -1,0 +1,7 @@
+#In case you are interested to find out the difference between cluster 0 of WT and KO condtion, this can be used 
+
+
+Seurat$ident_condition <- paste(Seurat$seurat_clusters, Seurat$sample, sep = "_")
+Idents(Seurat) <- "ident_condition"
+
+cluster_0_markers <- FindMarkers(Seurat, ident.1 = "0_WT", ident.2 = "0_KO",only.pos = F, min.pct = 0.25, logfc.threshold = 0.25, base = exp(1))
