@@ -1,0 +1,3 @@
+# Remove any cluster - This is useful when you are interested in any particular cell type 
+seurat_subset_labeled <- subset(seurat_integrated,
+                               idents = "cluster number", invert = TRUE)
