@@ -1,0 +1,41 @@
+library(Seurat)
+
+# Assuming top5 and Seurat_integrated are defined earlier in your code
+
+genes.list <- top5$gene
+
+output_dir <- "../(Enter directory for output)/Sample_A_Sample_B"
+
+# Create Vlnplots
+vlnplots_dir <- file.path(output_dir, "Vlnplots_top10")
+dir.create(vlnplots_dir, recursive = TRUE)
+
+vlnplot_list <- list()
+vlnplot_filenames <- vector("character", length(genes.list))
+
+for (i in 1:length(genes.list)) {
+  vlnplot_list[[i]] <- VlnPlot(object = Seurat_integrated, features = genes.list[i], split.by = "sample")
+  
+  vlnplot_filenames[i] <- paste(genes.list[i], ".png", sep = "")
+  
+  file_path <- file.path(vlnplots_dir, vlnplot_filenames[i])
+  
+  ggsave(filename = file_path, plot = vlnplot_list[[i]])
+}
+
+# Create Featureplots
+featureplots_dir <- file.path(output_dir, "Featureplots_top10")
+dir.create(featureplots_dir, recursive = TRUE)
+
+featureplot_list <- list()
+featureplot_filenames <- vector("character", length(genes.list))
+
+for (i in 1:length(genes.list)) {
+  featureplot_list[[i]] <- FeaturePlot(object = Seurat_integrated, features = genes.list[i], split.by = "sample", label = TRUE)
+  
+  featureplot_filenames[i] <- paste(genes.list[i], ".png", sep = "")
+  
+  file_path <- file.path(featureplots_dir, featureplot_filenames[i])
+  
+  ggsave(filename = file_path, plot = featureplot_list[[i]])
+}
