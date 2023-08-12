@@ -1,0 +1,196 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
+
+import os
+
+from selenium.webdriver.common.by import By
+import re
+
+genes_csv_file = r"C:\Users\User\Desktop\Run_3_InjWT\InjD3_D33_WT_Run3\iterations\D3_Run1_woINJWT_D3_Run1_InjWT_D3_Run2_InjWT_D32_Run2_InjWT\D3_Run1_woINJWT_D3_Run1_InjWT_D3_Run2_InjWT_D32_Run2_InjWT_makers_processed.xlsx"
+xlsx = pd.ExcelFile(genes_csv_file)
+
+
+
+for sheet_name in xlsx.sheet_names:
+
+        # Get the current working directory
+    current_directory = os.getcwd()
+
+    print(current_directory)
+
+    # Set the path for the downloaded file
+    download_directory = os.path.join(current_directory, 'downloads')
+    
+    # Step 1: Configure Chrome options for full screen
+
+    
+
+    # Step 2: Set the path to the ChromeDriver executable
+    chrome_driver_path = "C:\\Users\\User\\Downloads\\chromedriver_win32 (1)\\chromedriver.exe"
+    
+        # Change the default download directory of the browser
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--disable-notifications')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_experimental_option('prefs', {
+        'download.default_directory': download_directory,
+        'download.prompt_for_download': False,
+        'download.directory_upgrade': True,
+        'safebrowsing.enabled': True
+    })
+    
+    
+    # Step 3: Create Chrome driver with the configured options and driver path
+    driver = webdriver.Chrome(options=chrome_options, executable_path=chrome_driver_path)
+
+    # Step 4: Go to the website
+    driver.get("https://metascape.org/gp/index.html#/main/step1")
+
+    # Wait for 5 seconds
+    time.sleep(3)
+
+    # Read the current subsheet
+    genes_df = pd.read_excel(genes_csv_file, sheet_name=sheet_name)
+    
+    # Check if the "gene" column exists
+    if "gene" not in genes_df.columns:
+        continue  # Skip to the next subsheet if "gene" column is not found
+    
+    # Check if there are any genes in the current subsheet
+    if genes_df.empty:
+        continue  # Skip to the next subsheet if there are no genes
+    
+    genes = genes_df["gene"].tolist()  # Get the genes as a list
+
+    genes_input = driver.find_element(By.XPATH, "//textarea[@ng-model='inputData.textbox']")
+    genes_input.send_keys("\n".join(genes))  # Join the genes with newlines and paste in the textarea
+
+
+    submit_button = driver.find_element(By.XPATH, "//button[@class='k-primary k-button']")
+    submit_button.click()
+    
+    time.sleep(5)
+
+
+    # Step 5: Select species for analysis
+    species_dropdown = driver.find_element(By.XPATH, "//span[@class='k-dropdown-wrap k-state-default']")
+    species_dropdown.click()
+
+    time.sleep(5)
+
+    musculus_option = driver.find_element(By.XPATH, "//li[contains(text(), 'M. musculus')]")
+    musculus_option.click()
+
+    driver.find_element(By.XPATH, "//body").click()
+
+    time.sleep(5)
+
+
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    selected_option = ""
+
+    # Loop to find the correct option
+    for i in range(1, 10):
+        # Click on the first element
+        element_1_xpath = "//html/body/div[3]/div/div[1]/div[1]/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td[2]/span/span/span[1]"
+        element_1 = WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.XPATH, element_1_xpath)))
+        element_1.click()
+        
+        time.sleep(2)
+
+        element_2_xpath = f"//html/body/div[5]/div/div[2]/ul/li[{i}]"
+        element_2 = WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.XPATH, element_2_xpath)))
+        element_2.click()
+
+        time.sleep(2)
+
+        element_1 = WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.XPATH, element_1_xpath)))
+        selected_option = element_1.text
+        print("Selected option:", selected_option)
+
+        if "M. musculus" in selected_option:
+            break
+
+    # Print the final selected option
+    print("Final selected option:", selected_option)
+
+    # Step 6: Press on Express Analysis
+    express_analysis_button = driver.find_element(By.XPATH, "//button[contains(text(), 'Express Analysis')]")
+    express_analysis_button.click()
+
+    # Step 8: Click on analysis report page
+    report_button_xpath = "//button[contains(text(), 'Analysis Report Page')]"
+    report_button = WebDriverWait(driver, 10000).until(EC.element_to_be_clickable((By.XPATH, report_button_xpath)))
+    report_button.click()
+
+
+    time.sleep(10)
+    # Step 8: Switch to the analysis report page
+    report_page_window_handle = driver.window_handles[-1]  # Assuming the report page is the last opened window
+    driver.switch_to.window(report_page_window_handle)
+
+    # Step 9: Take a screenshot of the analysis report page
+    screenshot_file_path = f'C:\\Users\\User\\Downloads\\{sheet_name}_report_screenshot.png'  # Replace with your desired file path
+
+    driver.save_screenshot(screenshot_file_path)
+    
+   
+    # Wait for the element to be clickable
+    wait = WebDriverWait(driver, 10)
+    element = wait.until(EC.element_to_be_clickable((By.LINK_TEXT, "All in One Zip File")))
+
+    # Get the download link
+    download_link = element.get_attribute("href")
+
+    # Click the download link
+    driver.get(download_link)
+
+    # Find the session ID element using Selenium
+    session_id_element = driver.find_element(By.CSS_SELECTOR, '.badge.ng-binding')
+
+    # Extract the session ID text from the element
+    session_id_text = session_id_element.text
+
+    # Extract the session ID using regex
+    session_id = re.search(r'session id: (\w+)', session_id_text).group(1)
+
+    # Set the desired file name
+    new_file_name = f'{sheet_name}.zip'
+
+    # Wait for the download to complete
+    time.sleep(60)  # Adjust the sleep time as needed
+
+
+    # Set the source and destination file paths
+    source_file_path = os.path.join(download_directory, f'all.{session_id}.zip')
+    destination_file_path = os.path.join(download_directory, new_file_name)
+
+    print(source_file_path)
+    print(destination_file_path)
+
+    # Rename the downloaded file to the desired name
+    os.rename(source_file_path, destination_file_path)
+
+
+
+    # Close the WebDriver
+    driver.quit()
+
+    
+
+
+    # ... (continue with the rest of the code)
+
+
+
