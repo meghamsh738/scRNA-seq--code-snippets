@@ -1,0 +1,28 @@
+library(readr)
+library(tidyverse)
+library(openxlsx)
+
+# Read in the CSV file
+data <- read_csv("mydata.csv")
+
+# Define the number of clusters
+num_clusters <- n_distinct(data$cluster)
+
+# Create an Excel workbook object
+wb <- createWorkbook()
+
+# Loop over each cluster
+for (i in 0:num_clusters) {
+  # Filter the data based on cluster number
+  cluster_data <- filter(data, cluster == i)
+  
+  # Filter the genes based on p-value and log-fold change criteria
+  selected_genes <- filter(cluster_data, p_val_adj < 0.05, avg_logFC > 0.5)
+  
+  # Create a new worksheet for the cluster and add the selected genes
+  addWorksheet(wb, paste0("Cluster ", i))
+  writeData(wb, sheet = paste0("Cluster ", i), selected_genes)
+}
+
+# Save the Excel workbook
+saveWorkbook(wb, "selected_genes.xlsx")
