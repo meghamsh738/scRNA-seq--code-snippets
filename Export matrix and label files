@@ -1,0 +1,9 @@
+# Save the matrix data as CSV
+mat <- as.data.frame(GetAssayData(Seurat_integrated, "counts"))
+mat_file <- file.path(output_dir, "Sample_A_Sample_B_matrix.csv")
+write.csv(mat, file = mat_file)
+
+# Fetch and save the labels as CSV
+Labels <- FetchData(Seurat_integrated, vars = c("cells", "seurat_clusters", "orig.ident"))
+labels_file <- file.path(output_dir, "Sample_A_Sample_B_labels.csv")
+write.csv(Labels, file = labels_file)
